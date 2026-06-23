@@ -1,0 +1,11 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "biblioteca",
+            "database": "${workspaceFolder:projeto_biblioteca}/backend/banco.db"
+        }
+    ],
+    "sqltools.useNodeRuntime": true
+}

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Livros</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+
+<div class="container">
+    <h1>Cadastro de Livros</h1>
+
+    <input id="titulo" placeholder="Título do livro">
+    <input id="autor" placeholder="Autor">
+    <input id="id_categoria" type="number" placeholder="ID da Categoria">
+
+    <div class="botoes">
+        <button onclick="salvarLivro()">Salvar</button>
+        <button onclick="listarLivros()">Listar</button>
+    </div>
+
+    <div id="resultado"></div>
+</div>
+
+<script src="script.js"></script>
+
+
+</body>
+</html>
