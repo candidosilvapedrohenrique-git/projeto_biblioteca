@@ -1,58 +1,43 @@
-<!DOCTYPE html>
+<!doctype html>
 
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cadastro de Empréstimos</title>
-    <link rel="stylesheet" href="paginas.css">
-</head>
-<body>
+    <link rel="stylesheet" href="paginas.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Cadastro de Empréstimos</h1>
 
+      <input type="nome" id="nome" placeholder="Digite o título do livro" required />
 
-<div class="container">
-    <h1>Cadastro de Empréstimos</h1>
+      <input type="email" id="email" placeholder="Digite o email do usuário" required />
 
-    <input id="id_emprestimo" type="number" placeholder="ID do Empréstimo (para atualizar/excluir)">
-    <input id="id_livro" type="number" placeholder="ID do Livro">
+      <input id="data_saida" type="date" placeholder="Data de Saída" />
 
-    <input id="id_usuario" type="number" placeholder="ID do Usuário">
-
-    <input
-        id="data_saida"
-        type="date"
-        placeholder="Data de Saída"
-    >
-
-    <input
+      <input
         id="data_prevista_devolucao"
         type="date"
         placeholder="Data Prevista de Devolução"
-    >
+      />
 
-    <input
+      <input
         id="data_real_devolucao"
         type="date"
         placeholder="Data Real de Devolução"
-    >
+      />
 
-    <div class="botoes">
-        <button onclick="salvarEmprestimo()">
-            Salvar
-        </button>
-        <button onclick="atualizarEmprestimo()">
-            Atualizar
-        </button>
-        <button onclick="listarEmprestimos()">
-            Listar
-        </button>
+      <div class="botoes">
+        <button onclick="salvarEmprestimo()">Salvar</button>
+        <button onclick="atualizarEmprestimo()">Atualizar</button>
+        <button onclick="listarEmprestimos()">Listar</button>
+      </div>
+
+      <div id="resultado"></div>
     </div>
 
-    <div id="resultado"></div>
-</div>
-
-<script src="script_emprestimo.js"></script>
-
-
-</body>
+    <script src="script_emprestimo.js"></script>
+  </body>
 </html>
