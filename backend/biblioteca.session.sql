@@ -3,14 +3,14 @@
 
 -- TABELA DE CATEGORIAS
 -- Armazena os gêneros ou categorias dos livros.
-CREATE TABLE Categorias (
+CREATE TABLE IF NOT EXISTS Categorias (
     id_categoria INT AUTO_INCREMENT PRIMARY KEY,
     nome_categoria VARCHAR(100) NOT NULL UNIQUE
 );
 
 -- TABELA DE LIVROS
 -- Cada livro pertence a uma categoria.
-CREATE TABLE Livros (
+CREATE TABLE IF NOT EXISTS Livros (
     id_livro INT AUTO_INCREMENT PRIMARY KEY,
     titulo VARCHAR(100) NOT NULL,
     autor VARCHAR(100) NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE Livros (
 
 -- TABELA DE USUÁRIOS
 -- Armazena os dados dos usuários da biblioteca.
-CREATE TABLE Usuarios (
+CREATE TABLE IF NOT EXISTS Usuarios (
     id_usuario INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE
@@ -30,7 +30,7 @@ CREATE TABLE Usuarios (
 
 -- TABELA DE EMPRÉSTIMOS
 -- Registra quais livros foram emprestados para quais usuários.
-CREATE TABLE Emprestimos (
+CREATE TABLE IF NOT EXISTS Emprestimos (
     id_emprestimo INT AUTO_INCREMENT PRIMARY KEY,
 
     id_livro INT NOT NULL,
@@ -47,9 +47,9 @@ CREATE TABLE Emprestimos (
         REFERENCES Usuarios(id_usuario)
 );
 
--- =====================================================
+
 -- REGRAS DE NEGÓCIO
--- =====================================================
+
 --
 -- 1. Cada livro deve pertencer a uma categoria.
 -- 2. Um usuário pode realizar vários empréstimos.
@@ -72,4 +72,3 @@ CREATE TABLE Emprestimos (
 -- Se a consulta retornar um registro, o livro ainda
 -- está emprestado e não pode ser emprestado novamente.
 --
--- =====================================================

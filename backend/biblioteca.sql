@@ -1,12 +1,12 @@
 create data biblioteca;
 use biblioteca;
 
-create table Categorias (
+create table if not exists Categorias (
     id_categoria int auto_increment primary key,
     nome_categoria varchar(100)
 );
 
-create table Livros (
+create table if not exists Livros (
     id_livro int auto_increment primary key,
     titulo varchar(100),
     autor varchar(100),
@@ -14,13 +14,13 @@ create table Livros (
     foreign key (id_categoria) references Categorias(id_categoria)
 );
 
-create table Usuarios (
+create table if not exists Usuarios (
     id_usuarios int auto_increment primary key,
     nome varchar(100),
     email varchar(100)
 );
 
-create table Emprestimos (
+create table if not exists Emprestimos (
     id_imprestimos int auto_increment primary key,
     id_livro int,
     id_usuario int,

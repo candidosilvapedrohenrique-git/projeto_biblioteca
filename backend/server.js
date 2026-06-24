@@ -16,6 +16,7 @@ const db = new sqlite3.Database(
 
 );
 
+
 app.get("/", (req, res) => {
     res.send("Servidor funcionando!");
 });
@@ -347,21 +348,33 @@ app.post("/usuarios", (req, res) => {
         });
     }
 
-    db.run(
-        "INSERT INTO Usuarios (nome, email) VALUES (?, ?)",
-        [nome, email],
-        function (err) {
-            if (err) {
-                console.log("ERRO COMPLETO:", err);
-                return res.status(500).json({ erro: err.message });
-            }
 
-            res.status(201).json({
-                mensagem: "Usuário criado com sucesso",
-                id: this.lastID
+db.get(
+    "SELECT * FROM Usuarios WHERE email = ?",
+    [email],
+    (err, row) => {
+        if (row) {
+            return res.status(400).json({
+                erro: "Este email já está cadastrado"
             });
         }
-    );
+
+        db.run(
+            "INSERT INTO Usuarios (nome, email) VALUES (?, ?)",
+            [nome, email],
+            function (err) {
+                if (err) {
+                    return res.status(500).json({ erro: err.message });
+                }
+
+                res.status(201).json({
+                    mensagem: "Usuário criado com sucesso",
+                    id: this.lastID
+                });
+            }
+        );
+    }
+);
 });
 
 
