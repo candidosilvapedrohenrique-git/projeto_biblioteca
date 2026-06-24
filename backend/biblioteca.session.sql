@@ -1,30 +1,75 @@
+-- =====================================================
+-- BANCO DE DADOS: BIBLIOTECA
 
-create table Categorias (
-    id_categoria int auto_increment primary key,
-    nome_categoria varchar(100)
+-- TABELA DE CATEGORIAS
+-- Armazena os gêneros ou categorias dos livros.
+CREATE TABLE Categorias (
+    id_categoria INT AUTO_INCREMENT PRIMARY KEY,
+    nome_categoria VARCHAR(100) NOT NULL UNIQUE
 );
 
-create table Livros (
-    id_livro int auto_increment primary key,
-    titulo varchar(100),
-    autor varchar(100),
-    id_categoria int,
-    foreign key (id_categoria) references Categorias(id_categoria)
+-- TABELA DE LIVROS
+-- Cada livro pertence a uma categoria.
+CREATE TABLE Livros (
+    id_livro INT AUTO_INCREMENT PRIMARY KEY,
+    titulo VARCHAR(100) NOT NULL,
+    autor VARCHAR(100) NOT NULL,
+    id_categoria INT NOT NULL,
+
+    FOREIGN KEY (id_categoria)
+        REFERENCES Categorias(id_categoria)
 );
 
-create table Usuarios (
-    id_usuarios int auto_increment primary key,
-    nome varchar(100),
-    email varchar(100)
+-- TABELA DE USUÁRIOS
+-- Armazena os dados dos usuários da biblioteca.
+CREATE TABLE Usuarios (
+    id_usuario INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE
 );
 
-create table Emprestimos (
-    id_imprestimos int auto_increment primary key,
-    id_livro int,
-    id_usuario int,
-    data_saida date,
-    data_prevista_devolucao date,
-    data_real_devolucao date,
-    foreign key (id_livro) references Livros(id_livro),
-    foreign key (id_usuario) references Usuarios(id_usuario)
+-- TABELA DE EMPRÉSTIMOS
+-- Registra quais livros foram emprestados para quais usuários.
+CREATE TABLE Emprestimos (
+    id_emprestimo INT AUTO_INCREMENT PRIMARY KEY,
+
+    id_livro INT NOT NULL,
+    id_usuario INT NOT NULL,
+
+    data_saida DATE NOT NULL,
+    data_prevista_devolucao DATE NOT NULL,
+    data_real_devolucao DATE,
+
+    FOREIGN KEY (id_livro)
+        REFERENCES Livros(id_livro),
+
+    FOREIGN KEY (id_usuario)
+        REFERENCES Usuarios(id_usuario)
 );
+
+-- =====================================================
+-- REGRAS DE NEGÓCIO
+-- =====================================================
+--
+-- 1. Cada livro deve pertencer a uma categoria.
+-- 2. Um usuário pode realizar vários empréstimos.
+-- 3. Um usuário pode emprestar o mesmo livro novamente
+--    após devolvê-lo.
+-- 4. O e-mail de cada usuário deve ser único.
+-- 5. Não podem existir categorias com nomes repetidos.
+-- 6. Um livro não deve estar emprestado para duas pessoas
+--    ao mesmo tempo (essa regra deve ser validada pela
+--    aplicação ou por consultas antes de registrar
+--    um novo empréstimo).
+--
+-- Exemplo de verificação:
+--
+-- SELECT *
+-- FROM Emprestimos
+-- WHERE id_livro = 1
+--   AND data_real_devolucao IS NULL;
+--
+-- Se a consulta retornar um registro, o livro ainda
+-- está emprestado e não pode ser emprestado novamente.
+--
+-- =====================================================

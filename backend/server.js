@@ -13,12 +13,14 @@ app.use(express.json());
 // Conexão com banco
 const db = new sqlite3.Database(
     path.join(__dirname, "banco.db"),
-    
+
 );
 
-// ======================
-// GET - Listar livros
-// ======================
+app.get("/", (req, res) => {
+    res.send("Servidor funcionando!");
+});
+
+//get listar livros
 app.get("/livros", (req, res) => {
     db.all("SELECT * FROM Livros", [], (err, rows) => {
         if (err) {
@@ -32,9 +34,8 @@ app.get("/livros", (req, res) => {
     });
 });
 
-// ======================
-// GET - Buscar livro por ID
-// ======================
+
+//get buscar livro por id
 app.get("/livros/:id", (req, res) => {
     const { id } = req.params;
 
@@ -60,9 +61,8 @@ app.get("/livros/:id", (req, res) => {
     );
 });
 
-// ======================
-// POST - Criar livro
-// ======================
+
+//post criar livro
 app.post("/livros", (req, res) => {
     const { titulo, autor, id_categoria } = req.body;
 
@@ -91,9 +91,9 @@ app.post("/livros", (req, res) => {
     );
 });
 
-// ======================
-// PUT - Atualizar livro
-// ======================
+
+
+//put atualizar livro
 app.put("/livros/:id", (req, res) => {
     const { id } = req.params;
     const { titulo, autor, id_categoria } = req.body;
@@ -131,7 +131,7 @@ app.put("/livros/:id", (req, res) => {
 });
 
 
-// DELETE - Excluir livro
+//delete excluir livro
 app.delete("/livros/:id", (req, res) => {
     const { id } = req.params;
 
@@ -158,6 +158,488 @@ app.delete("/livros/:id", (req, res) => {
         }
     );
 });
+
+
+
+
+//get listar categorias
+app.get("/categoria", (req, res) => {
+    db.all("SELECT * FROM Categoria", [], (err, rows) => {
+        if (err) {
+            console.log("Erro SELECT:", err.message);
+            return res.status(500).json({
+                erro: err.message
+            });
+        }
+
+        res.status(200).json(rows);
+    });
+});
+
+
+//get buscar categoria por id
+app.get("/categoria/:id", (req, res) => {
+    const { id } = req.params;
+
+    db.get(
+        "SELECT * FROM Categoria WHERE id_categoria = ?",
+        [id],
+        (err, row) => {
+            if (err) {
+                return res.status(500).json({
+                    erro: err.message
+                });
+            }
+
+            if (!row) {
+                return res.status(404).json({
+                    erro: "Categoria não encontrada"
+                });
+            }
+
+            res.status(200).json(row);
+        }
+    );
+});
+
+
+//post criar categoria
+app.post("/categoria", (req, res) => {
+    const { nome_categoria } = req.body;
+
+    if (!nome_categoria) {
+        return res.status(400).json({
+            erro: "Nome da categoria é obrigatório"
+        });
+    }
+
+    db.run(
+        "INSERT INTO Categoria (nome_categoria) VALUES (?)",
+        [nome_categoria],
+        function (err) {
+            if (err) {
+                return res.status(500).json({
+                    erro: err.message
+                });
+            }
+
+            res.status(201).json({
+                mensagem: "Categoria criada com sucesso",
+                id_categoria: this.lastID
+            });
+        }
+    );
+});
+
+
+//put atualizar categoria
+app.put("/categoria/:id", (req, res) => {
+    const { id } = req.params;
+    const { nome_categoria } = req.body;
+
+    if (!nome_categoria) {
+        return res.status(400).json({
+            erro: "Nome da categoria é obrigatório"
+        });
+    }
+
+    db.run(
+        `UPDATE Categoria
+         SET nome_categoria = ?
+         WHERE id_categoria = ?`,
+        [nome_categoria, id],
+        function (err) {
+            if (err) {
+                return res.status(500).json({
+                    erro: err.message
+                });
+            }
+
+            if (this.changes === 0) {
+                return res.status(404).json({
+                    erro: "Categoria não encontrada"
+                });
+            }
+
+            res.status(200).json({
+                mensagem: "Categoria atualizada com sucesso"
+            });
+        }
+    );
+});
+
+
+//delete excluir categoria
+app.delete("/categoria/:id", (req, res) => {
+    const { id } = req.params;
+
+    db.run(
+        "DELETE FROM Categoria WHERE id_categoria = ?",
+        [id],
+        function (err) {
+            if (err) {
+                return res.status(500).json({
+                    erro: err.message
+                });
+            }
+
+            if (this.changes === 0) {
+                return res.status(404).json({
+                    erro: "Categoria não encontrada"
+                });
+            }
+
+            res.status(200).json({
+                mensagem: "Categoria removida com sucesso"
+            });
+        }
+    );
+});
+
+
+
+//get listar usuários
+app.get("/usuario", (req, res) => {
+    db.all("SELECT * FROM Usuario", [], (err, rows) => {
+        if (err) {
+            return res.status(500).json({
+                erro: err.message
+            });
+        }
+
+        res.status(200).json(rows);
+    });
+
+
+});
+
+
+//get  busca usuário por id
+app.get("/usuario/:id", (req, res) => {
+    const { id } = req.params;
+
+
+    db.get(
+        "SELECT * FROM Usuario WHERE id = ?",
+        [id],
+        (err, row) => {
+            if (err) {
+                return res.status(500).json({
+                    erro: err.message
+                });
+            }
+
+            if (!row) {
+                return res.status(404).json({
+                    erro: "Usuário não encontrado"
+                });
+            }
+
+            res.status(200).json(row);
+        }
+    );
+
+
+});
+
+//post criar usuário
+app.post("/usuario", (req, res) => {
+    const { nome, email } = req.body;
+
+
+    if (!nome || !email) {
+        return res.status(400).json({
+            erro: "Nome e email são obrigatórios"
+        });
+    }
+
+    db.run(
+        "INSERT INTO Usuario (nome, email) VALUES (?, ?)",
+        [nome, email],
+        function (err) {
+            if (err) {
+                return res.status(500).json({
+                    erro: err.message
+                });
+            }
+
+            res.status(201).json({
+                mensagem: "Usuário criado com sucesso",
+                id: this.lastID
+            });
+        }
+    );
+
+
+});
+
+
+//put atualizar usuário
+app.put("/usuario/:id", (req, res) => {
+    const { id } = req.params;
+    const { nome, email } = req.body;
+
+
+    if (!nome || !email) {
+        return res.status(400).json({
+            erro: "Nome e email são obrigatórios"
+        });
+    }
+
+    db.run(
+        `UPDATE Usuario
+     SET nome = ?, email = ?
+     WHERE id = ?`,
+        [nome, email, id],
+        function (err) {
+            if (err) {
+                return res.status(500).json({
+                    erro: err.message
+                });
+            }
+
+            if (this.changes === 0) {
+                return res.status(404).json({
+                    erro: "Usuário não encontrado"
+                });
+            }
+
+            res.status(200).json({
+                mensagem: "Usuário atualizado com sucesso"
+            });
+        }
+    );
+
+
+});
+
+
+//delete remove usuário
+app.delete("/usuario/:id", (req, res) => {
+    const { id } = req.params;
+
+
+    db.run(
+        "DELETE FROM Usuario WHERE id = ?",
+        [id],
+        function (err) {
+            if (err) {
+                return res.status(500).json({
+                    erro: err.message
+                });
+            }
+
+            if (this.changes === 0) {
+                return res.status(404).json({
+                    erro: "Usuário não encontrado"
+                });
+            }
+
+            res.status(200).json({
+                mensagem: "Usuário removido com sucesso"
+            });
+        }
+    );
+
+
+});
+
+
+
+
+//get listar empréstimos
+app.get("/emprestimos", (req, res) => {
+    db.all("SELECT * FROM Emprestimos", [], (err, rows) => {
+        if (err) {
+            return res.status(500).json({
+                erro: err.message
+            });
+        }
+
+        res.status(200).json(rows);
+    });
+
+});
+
+
+//get lista empréstimo por id
+app.get("/emprestimos/:id", (req, res) => {
+    const { id } = req.params;
+
+
+    db.get(
+        "SELECT * FROM Emprestimos WHERE id = ?",
+        [id],
+        (err, row) => {
+            if (err) {
+                return res.status(500).json({
+                    erro: err.message
+                });
+            }
+
+            if (!row) {
+                return res.status(404).json({
+                    erro: "Empréstimo não encontrado"
+                });
+            }
+
+            res.status(200).json(row);
+        }
+    );
+
+
+});
+
+
+//post cria emprestimo
+app.post("/emprestimos", (req, res) => {
+    const {
+        id_livro,
+        id_usuario,
+        data_saida,
+        data_prevista_devolucao,
+        data_real_devolucao
+    } = req.body;
+
+
+    if (
+        !id_livro ||
+        !id_usuario ||
+        !data_saida ||
+        !data_prevista_devolucao
+    ) {
+        return res.status(400).json({
+            erro: "Preencha todos os campos obrigatórios"
+        });
+    }
+
+    db.run(
+        `INSERT INTO Emprestimos
+    (
+        id_livro,
+        id_usuario,
+        data_saida,
+        data_prevista_devolucao,
+        data_real_devolucao
+    )
+    VALUES (?, ?, ?, ?, ?)`,
+        [
+            id_livro,
+            id_usuario,
+            data_saida,
+            data_prevista_devolucao,
+            data_real_devolucao
+        ],
+        function (err) {
+            if (err) {
+                return res.status(500).json({
+                    erro: err.message
+                });
+            }
+
+            res.status(201).json({
+                mensagem: "Empréstimo cadastrado com sucesso",
+                id: this.lastID
+            });
+        }
+    );
+
+
+});
+
+
+//put atualizar empréstimo
+app.put("/emprestimos/:id", (req, res) => {
+    const { id } = req.params;
+
+    const {
+        id_livro,
+        id_usuario,
+        data_saida,
+        data_prevista_devolucao,
+        data_real_devolucao
+    } = req.body;
+
+    if (
+        !id_livro ||
+        !id_usuario ||
+        !data_saida ||
+        !data_prevista_devolucao
+    ) {
+        return res.status(400).json({
+            erro: "Preencha todos os campos obrigatórios"
+        });
+    }
+
+    db.run(
+        `UPDATE Emprestimos
+     SET
+        id_livro = ?,
+        id_usuario = ?,
+        data_saida = ?,
+        data_prevista_devolucao = ?,
+        data_real_devolucao = ?
+     WHERE id = ?`,
+        [
+            id_livro,
+            id_usuario,
+            data_saida,
+            data_prevista_devolucao,
+            data_real_devolucao,
+            id
+        ],
+        function (err) {
+            if (err) {
+                return res.status(500).json({
+                    erro: err.message
+                });
+            }
+
+            if (this.changes === 0) {
+                return res.status(404).json({
+                    erro: "Empréstimo não encontrado"
+                });
+            }
+
+            res.status(200).json({
+                mensagem: "Empréstimo atualizado com sucesso"
+            });
+        }
+    );
+
+});
+
+
+// delete remove empréstimo
+app.delete("/emprestimos/:id", (req, res) => {
+    const { id } = req.params;
+
+
+    db.run(
+        "DELETE FROM Emprestimos WHERE id = ?",
+        [id],
+        function (err) {
+            if (err) {
+                return res.status(500).json({
+                    erro: err.message
+                });
+            }
+
+            if (this.changes === 0) {
+                return res.status(404).json({
+                    erro: "Empréstimo não encontrado"
+                });
+            }
+
+            res.status(200).json({
+                mensagem: "Empréstimo removido com sucesso"
+            });
+        }
+    );
+
+});
+
+
 
 // Inicia servidor
 app.listen(3000, () => {
