@@ -1,5 +1,5 @@
-create data biblioteca;
-use biblioteca;
+CREATE DATABASE biblioteca;
+USE biblioteca;
 
 create table if not exists Categorias (
     id_categoria int auto_increment primary key,
@@ -15,13 +15,13 @@ create table if not exists Livros (
 );
 
 create table if not exists Usuarios (
-    id_usuarios int auto_increment primary key,
+    id_usuario int auto_increment primary key,
     nome varchar(100),
     email varchar(100)
 );
 
 create table if not exists Emprestimos (
-    id_imprestimos int auto_increment primary key,
+    id_emprestimos int auto_increment primary key,
     id_livro int,
     id_usuario int,
     data_saida date,

@@ -1,8 +1,8 @@
--- =====================================================
+
 -- BANCO DE DADOS: BIBLIOTECA
 
 -- TABELA DE CATEGORIAS
--- Armazena os gêneros ou categorias dos livros.
+-- Armazena os gêneros/tipos ou categorias dos livros.
 CREATE TABLE IF NOT EXISTS Categorias (
     id_categoria INT AUTO_INCREMENT PRIMARY KEY,
     nome_categoria VARCHAR(100) NOT NULL UNIQUE
