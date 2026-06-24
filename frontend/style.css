@@ -1,69 +1,97 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
-  }
-
-body {
-background-color: #f4f4f4;
-display: flex;
-justify-content: center;
-padding-top: 40px;
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
-.container {
-width: 600px;
-background: white;
-padding: 25px;
-border-radius: 10px;
-box-shadow: 0 0 10px rgba(0,0,0,0.1);
+body{
+    background-color: #f4f6f8;
 }
 
-h1 {
-text-align: center;
-margin-bottom: 20px;
-color: #333;
+/* HEADER */
+
+header{
+    background-color: #1f4fa3;
+    color: white;
+    padding: 20px 40px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-input {
-width: 100%;
-padding: 12px;
-margin-bottom: 10px;
-border: 1px solid #ccc;
-border-radius: 5px;
-font-size: 16px;
+.logo{
+    font-size: 24px;
+    font-weight: bold;
 }
 
-.botoes {
-display: flex;
-gap: 10px;
-margin-bottom: 20px;
+.usuario a{
+    font-size: 18px;
+    color: white;
+    text-decoration: none;
 }
 
-button {
-flex: 1;
-padding: 12px;
-border: none;
-border-radius: 5px;
-background-color: #0078ff;
-color: white;
-font-size: 16px;
-cursor: pointer;
+/* MAIN */
+
+main{
+    width: 90%;
+    margin: auto;
+    margin-top: 60px;
 }
 
-button:hover {
-background-color: #005ec7;
+/* TEXTO */
+
+.boas-vindas{
+    text-align: center;
+    margin-bottom: 50px;
 }
 
-#resultado {
-margin-top: 15px;
+.boas-vindas h1{
+    font-size: 40px;
+    margin-bottom: 10px;
 }
 
-.livro {
-background-color: #f8f8f8;
-border-left: 5px solid #0078ff;
-padding: 10px;
-margin-bottom: 10px;
-border-radius: 5px;
+.boas-vindas p{
+    font-size: 18px;
+    color: gray;
+}
+
+/* CARDS */
+
+.cards{
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.card{
+    background-color: white;
+    width: 250px;
+    padding: 30px;
+    text-align: center;
+
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.card h2{
+    margin-bottom: 30px;
+    font-size: 22px;
+}
+
+.card button{
+    width: 100%;
+    padding: 12px;
+    border: none;
+    background-color: #1f4fa3;
+    color: white;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.card button:hover{
+    background-color: #163b7d;
 }
