@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Empréstimos</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>Cadastro de Categorias</h1>
+
+    <input
+        id="nome_categoria"
+        placeholder="Nome da Categoria"
+    >
+
+    <div class="botoes">
+        <button onclick="salvarCategoria()">
+            Salvar
+        </button>
+
+        <button onclick="listarCategorias()">
+            Listar
+        </button>
+    </div>
+
+    <div id="resultado"></div>
+</div>
+
+<script src="script_categoria.js"></script>
+
+</body>
+</html>

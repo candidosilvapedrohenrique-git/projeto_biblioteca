@@ -1,4 +1,4 @@
-const API = "http://localhost:3000/livros";
+const API = "http://localhost:3000/livros"
 
 // Salvar livro
 async function salvarLivro() {
@@ -72,3 +72,4 @@ if (res.ok) {
 
 
 }
+
