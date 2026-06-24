@@ -22,7 +22,7 @@ app.get("/", (req, res) => {
 
 //get listar livros
 app.get("/livros", (req, res) => {
-    db.all("SELECT * FROM Livros", [], (err, rows) => {
+    db.all("SELECT id_livro AS id, titulo, autor, id_categoria FROM Livros", [], (err, rows) => {
         if (err) {
             console.log("Erro SELECT:", err.message);
             return res.status(500).json({
@@ -40,7 +40,7 @@ app.get("/livros/:id", (req, res) => {
     const { id } = req.params;
 
     db.get(
-        "SELECT * FROM Livros WHERE id = ?",
+        "SELECT id_livro AS id, titulo, autor, id_categoria FROM Livros WHERE id_livro = ?",
         [id],
         (err, row) => {
             if (err) {
@@ -107,7 +107,7 @@ app.put("/livros/:id", (req, res) => {
     db.run(
         `UPDATE Livros
          SET titulo = ?, autor = ?, id_categoria = ?
-         WHERE id = ?`,
+         WHERE id_livro = ?`,
         [titulo, autor, id_categoria, id],
         function (err) {
             if (err) {
@@ -136,7 +136,7 @@ app.delete("/livros/:id", (req, res) => {
     const { id } = req.params;
 
     db.run(
-        "DELETE FROM Livros WHERE id = ?",
+        "DELETE FROM Livros WHERE id_livro = ?",
         [id],
         function (err) {
             if (err) {
@@ -163,8 +163,8 @@ app.delete("/livros/:id", (req, res) => {
 
 
 //get listar categorias
-app.get("/categoria", (req, res) => {
-    db.all("SELECT * FROM Categoria", [], (err, rows) => {
+app.get("/categorias", (req, res) => {
+    db.all("SELECT id_categoria, nome_categoria FROM Categorias", [], (err, rows) => {
         if (err) {
             console.log("Erro SELECT:", err.message);
             return res.status(500).json({
@@ -178,11 +178,11 @@ app.get("/categoria", (req, res) => {
 
 
 //get buscar categoria por id
-app.get("/categoria/:id", (req, res) => {
+app.get("/categorias/:id", (req, res) => {
     const { id } = req.params;
 
     db.get(
-        "SELECT * FROM Categoria WHERE id_categoria = ?",
+        "SELECT id_categoria, nome_categoria FROM Categorias WHERE id_categoria = ?",
         [id],
         (err, row) => {
             if (err) {
@@ -204,7 +204,7 @@ app.get("/categoria/:id", (req, res) => {
 
 
 //post criar categoria
-app.post("/categoria", (req, res) => {
+app.post("/categorias", (req, res) => {
     const { nome_categoria } = req.body;
 
     if (!nome_categoria) {
@@ -214,7 +214,7 @@ app.post("/categoria", (req, res) => {
     }
 
     db.run(
-        "INSERT INTO Categoria (nome_categoria) VALUES (?)",
+        "INSERT INTO Categorias (nome_categoria) VALUES (?)",
         [nome_categoria],
         function (err) {
             if (err) {
@@ -233,7 +233,7 @@ app.post("/categoria", (req, res) => {
 
 
 //put atualizar categoria
-app.put("/categoria/:id", (req, res) => {
+app.put("/categorias/:id", (req, res) => {
     const { id } = req.params;
     const { nome_categoria } = req.body;
 
@@ -244,7 +244,7 @@ app.put("/categoria/:id", (req, res) => {
     }
 
     db.run(
-        `UPDATE Categoria
+        `UPDATE Categorias
          SET nome_categoria = ?
          WHERE id_categoria = ?`,
         [nome_categoria, id],
@@ -270,11 +270,11 @@ app.put("/categoria/:id", (req, res) => {
 
 
 //delete excluir categoria
-app.delete("/categoria/:id", (req, res) => {
+app.delete("/categorias/:id", (req, res) => {
     const { id } = req.params;
 
     db.run(
-        "DELETE FROM Categoria WHERE id_categoria = ?",
+        "DELETE FROM Categorias WHERE id_categoria = ?",
         [id],
         function (err) {
             if (err) {
@@ -299,8 +299,8 @@ app.delete("/categoria/:id", (req, res) => {
 
 
 //get listar usuários
-app.get("/usuario", (req, res) => {
-    db.all("SELECT * FROM Usuario", [], (err, rows) => {
+app.get("/usuarios", (req, res) => {
+    db.all("SELECT id_usuario AS id, nome, email FROM Usuarios", [], (err, rows) => {
         if (err) {
             return res.status(500).json({
                 erro: err.message
@@ -309,18 +309,15 @@ app.get("/usuario", (req, res) => {
 
         res.status(200).json(rows);
     });
-
-
 });
 
 
 //get  busca usuário por id
-app.get("/usuario/:id", (req, res) => {
+app.get("/usuarios/:id", (req, res) => {
     const { id } = req.params;
 
-
     db.get(
-        "SELECT * FROM Usuario WHERE id = ?",
+        "SELECT id_usuario AS id, nome, email FROM Usuarios WHERE id_usuario = ?",
         [id],
         (err, row) => {
             if (err) {
@@ -338,14 +335,11 @@ app.get("/usuario/:id", (req, res) => {
             res.status(200).json(row);
         }
     );
-
-
 });
 
 //post criar usuário
-app.post("/usuario", (req, res) => {
+app.post("/usuarios", (req, res) => {
     const { nome, email } = req.body;
-
 
     if (!nome || !email) {
         return res.status(400).json({
@@ -354,13 +348,12 @@ app.post("/usuario", (req, res) => {
     }
 
     db.run(
-        "INSERT INTO Usuario (nome, email) VALUES (?, ?)",
+        "INSERT INTO Usuarios (nome, email) VALUES (?, ?)",
         [nome, email],
         function (err) {
             if (err) {
-                return res.status(500).json({
-                    erro: err.message
-                });
+                console.log("ERRO COMPLETO:", err);
+                return res.status(500).json({ erro: err.message });
             }
 
             res.status(201).json({
@@ -369,16 +362,13 @@ app.post("/usuario", (req, res) => {
             });
         }
     );
-
-
 });
 
 
 //put atualizar usuário
-app.put("/usuario/:id", (req, res) => {
+app.put("/usuarios/:id", (req, res) => {
     const { id } = req.params;
     const { nome, email } = req.body;
-
 
     if (!nome || !email) {
         return res.status(400).json({
@@ -387,9 +377,9 @@ app.put("/usuario/:id", (req, res) => {
     }
 
     db.run(
-        `UPDATE Usuario
+        `UPDATE Usuarios
      SET nome = ?, email = ?
-     WHERE id = ?`,
+     WHERE id_usuario = ?`,
         [nome, email, id],
         function (err) {
             if (err) {
@@ -409,18 +399,15 @@ app.put("/usuario/:id", (req, res) => {
             });
         }
     );
-
-
 });
 
 
 //delete remove usuário
-app.delete("/usuario/:id", (req, res) => {
+app.delete("/usuarios/:id", (req, res) => {
     const { id } = req.params;
 
-
     db.run(
-        "DELETE FROM Usuario WHERE id = ?",
+        "DELETE FROM Usuarios WHERE id_usuario = ?",
         [id],
         function (err) {
             if (err) {
@@ -440,8 +427,6 @@ app.delete("/usuario/:id", (req, res) => {
             });
         }
     );
-
-
 });
 
 
@@ -449,7 +434,7 @@ app.delete("/usuario/:id", (req, res) => {
 
 //get listar empréstimos
 app.get("/emprestimos", (req, res) => {
-    db.all("SELECT * FROM Emprestimos", [], (err, rows) => {
+    db.all("SELECT id_emprestimo AS id, id_livro, id_usuario, data_saida, data_prevista_devolucao, data_real_devolucao FROM Emprestimos", [], (err, rows) => {
         if (err) {
             return res.status(500).json({
                 erro: err.message
@@ -458,7 +443,6 @@ app.get("/emprestimos", (req, res) => {
 
         res.status(200).json(rows);
     });
-
 });
 
 
@@ -466,9 +450,8 @@ app.get("/emprestimos", (req, res) => {
 app.get("/emprestimos/:id", (req, res) => {
     const { id } = req.params;
 
-
     db.get(
-        "SELECT * FROM Emprestimos WHERE id = ?",
+        "SELECT id_emprestimo AS id, id_livro, id_usuario, data_saida, data_prevista_devolucao, data_real_devolucao FROM Emprestimos WHERE id_emprestimo = ?",
         [id],
         (err, row) => {
             if (err) {
@@ -486,8 +469,6 @@ app.get("/emprestimos/:id", (req, res) => {
             res.status(200).json(row);
         }
     );
-
-
 });
 
 
@@ -500,7 +481,6 @@ app.post("/emprestimos", (req, res) => {
         data_prevista_devolucao,
         data_real_devolucao
     } = req.body;
-
 
     if (
         !id_livro ||
@@ -543,8 +523,6 @@ app.post("/emprestimos", (req, res) => {
             });
         }
     );
-
-
 });
 
 
@@ -579,7 +557,7 @@ app.put("/emprestimos/:id", (req, res) => {
         data_saida = ?,
         data_prevista_devolucao = ?,
         data_real_devolucao = ?
-     WHERE id = ?`,
+     WHERE id_emprestimo = ?`,
         [
             id_livro,
             id_usuario,
@@ -606,7 +584,6 @@ app.put("/emprestimos/:id", (req, res) => {
             });
         }
     );
-
 });
 
 
@@ -614,9 +591,8 @@ app.put("/emprestimos/:id", (req, res) => {
 app.delete("/emprestimos/:id", (req, res) => {
     const { id } = req.params;
 
-
     db.run(
-        "DELETE FROM Emprestimos WHERE id = ?",
+        "DELETE FROM Emprestimos WHERE id_emprestimo = ?",
         [id],
         function (err) {
             if (err) {
@@ -636,7 +612,6 @@ app.delete("/emprestimos/:id", (req, res) => {
             });
         }
     );
-
 });
 
 

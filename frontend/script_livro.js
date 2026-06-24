@@ -1,75 +1,105 @@
-const API = "http://localhost:3000/livros"
+const API = "http://localhost:3000/livros";
 
-// Salvar livro
 async function salvarLivro() {
-const titulo = document.getElementById("titulo").value;
-const autor = document.getElementById("autor").value;
-const id_categoria = document.getElementById("id_categoria").value;
+    const titulo = document.getElementById("titulo").value;
+    const autor = document.getElementById("autor").value;
+    const id_categoria = document.getElementById("id_categoria").value;
 
-const res = await fetch(API, {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-        titulo,
-        autor,
-        id_categoria
-    })
-});
+    const res = await fetch(API, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            titulo,
+            autor,
+            id_categoria
+        })
+    });
 
-const dados = await res.json();
+    const dados = await res.json();
 
-if (res.ok) {
-    alert("Livro salvo com sucesso!");
-    listarLivros();
-} else {
-    alert("Erro: " + dados.erro);
+    if (res.ok) {
+        alert("Livro salvo com sucesso!");
+        limparCamposLivro();
+        listarLivros();
+    } else {
+        alert(dados.erro || "Erro ao salvar livro");
+    }
 }
 
-
-}
-
-// Listar livros
 async function listarLivros() {
-const res = await fetch(API);
-const livros = await res.json();
+    const res = await fetch(API);
+    const livros = await res.json();
 
+    let html = "";
 
-let html = "";
+    livros.forEach(livro => {
+        html += `
+            <div class="livro">
+                <strong>ID:</strong> ${livro.id}<br>
+                <strong>Título:</strong> ${livro.titulo}<br>
+                <strong>Autor:</strong> ${livro.autor}<br>
+                <strong>Categoria:</strong> ${livro.id_categoria}<br>
+                <button onclick="excluirLivro(${livro.id})">Excluir</button>
+            </div>
+        `;
+    });
 
-livros.forEach(livro => {
-    html += `
-        <p>
-            ID: ${livro.id} |
-            Título: ${livro.titulo} |
-            Autor: ${livro.autor} |
-            Categoria: ${livro.id_categoria}
-        </p>
-    `;
-});
-
-document.getElementById("resultado").innerHTML = html;
-
-
+    document.getElementById("resultado").innerHTML = html;
 }
 
-// Excluir livro
+async function atualizarLivro() {
+    const id = document.getElementById("id_livro").value;
+    const titulo = document.getElementById("titulo").value;
+    const autor = document.getElementById("autor").value;
+    const id_categoria = document.getElementById("id_categoria").value;
+
+    if (!id) {
+        alert("Informe o ID do livro para atualizar.");
+        return;
+    }
+
+    const res = await fetch(`${API}/${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ titulo, autor, id_categoria })
+    });
+
+    const dados = await res.json();
+
+    if (res.ok) {
+        alert(dados.mensagem);
+        limparCamposLivro();
+        listarLivros();
+    } else {
+        alert(dados.erro || "Erro ao atualizar livro");
+    }
+}
+
 async function excluirLivro(id) {
-const res = await fetch(`${API}/${id}`, {
-method: "DELETE"
-});
+    if (!confirm("Deseja realmente excluir este livro?")) return;
 
+    const res = await fetch(`${API}/${id}`, {
+        method: "DELETE"
+    });
 
-const dados = await res.json();
+    const dados = await res.json();
 
-if (res.ok) {
-    alert(dados.mensagem);
-    listarLivros();
-} else {
-    alert(dados.erro);
+    if (res.ok) {
+        alert(dados.mensagem);
+        listarLivros();
+    } else {
+        alert(dados.erro || "Erro ao excluir livro");
+    }
 }
 
-
+function limparCamposLivro() {
+    document.getElementById("id_livro").value = "";
+    document.getElementById("titulo").value = "";
+    document.getElementById("autor").value = "";
+    document.getElementById("id_categoria").value = "";
 }
 

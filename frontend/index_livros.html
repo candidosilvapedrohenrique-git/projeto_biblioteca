@@ -13,12 +13,14 @@
 <div class="container">
     <h1>Cadastro de Livros</h1>
 
+    <input id="id_livro" type="number" placeholder="ID do Livro (para atualizar/excluir)">
     <input id="titulo" placeholder="Título do livro">
     <input id="autor" placeholder="Autor">
     <input id="id_categoria" type="number" placeholder="ID da Categoria">
 
     <div class="botoes">
         <button onclick="salvarLivro()">Salvar</button>
+        <button onclick="atualizarLivro()">Atualizar</button>
         <button onclick="listarLivros()">Listar</button>
     </div>
 
