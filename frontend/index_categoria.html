@@ -12,16 +12,16 @@
 <div class="container">
     <h1>Cadastro de Categorias</h1>
 
-    <input
-        id="nome_categoria"
-        placeholder="Nome da Categoria"
-    >
+    <input id="id_categoria" type="number" placeholder="ID da Categoria (para atualizar/excluir)">
+    <input id="nome_categoria" placeholder="Nome da Categoria">
 
     <div class="botoes">
         <button onclick="salvarCategoria()">
             Salvar
         </button>
-
+        <button onclick="atualizarCategoria()">
+            Atualizar
+        </button>
         <button onclick="listarCategorias()">
             Listar
         </button>

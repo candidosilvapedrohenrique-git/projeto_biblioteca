@@ -13,6 +13,7 @@
 <div class="container">
     <h1>Cadastro de Empréstimos</h1>
 
+    <input id="id_emprestimo" type="number" placeholder="ID do Empréstimo (para atualizar/excluir)">
     <input id="id_livro" type="number" placeholder="ID do Livro">
 
     <input id="id_usuario" type="number" placeholder="ID do Usuário">
@@ -39,7 +40,9 @@
         <button onclick="salvarEmprestimo()">
             Salvar
         </button>
-
+        <button onclick="atualizarEmprestimo()">
+            Atualizar
+        </button>
         <button onclick="listarEmprestimos()">
             Listar
         </button>
